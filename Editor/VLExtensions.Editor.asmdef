@@ -1,0 +1,18 @@
+{
+    "name": "VLExtensions.Editor",
+    "rootNamespace": "VLExtensionsEditor",
+    "references": [
+        "GUID:06ce6a473eedb9c45bc1a2c65c16fef8"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

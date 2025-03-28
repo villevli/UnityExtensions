@@ -1,0 +1,22 @@
+{
+  "name": "com.villevli.extensions",
+  "version": "0.1.0",
+  "displayName": "VL Extensions",
+  "description": "Collection of small extensions, utils and property attributes.",
+  "unity": "2021.3",
+  "keywords": [
+    "utils",
+    "extensions"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "Ville Lindblad",
+    "email": "villevli.dev@gmail.com"
+  },
+  "samples": [
+    {
+      "displayName": "Scripts",
+      "path": "Samples~/Scripts"
+    }
+  ]
+}
