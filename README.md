@@ -3,6 +3,7 @@
 Collection of small extensions, utils and property attributes.
 
 - [SingleLineAttribute](Runtime/PropertyAttributes/SingleLineAttribute.cs) - Draw a serialized field on a single line even if it's a struct with multiple fields
+- [EnumDropdownAttribute](Runtime/PropertyAttributes/EnumDropdownAttribute.cs) - Draw a string or int field as an enum dropdown
 
 See [sample scripts](Samples~/Scripts)
 
