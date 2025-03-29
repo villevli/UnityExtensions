@@ -1,0 +1,12 @@
+{
+    "name": "VLExtensions.Tests",
+    "rootNamespace": "VLExtensions.Tests",
+    "references": [
+        "VLExtensions"
+    ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": []
+}

@@ -1,0 +1,18 @@
+text,text
+"comma,intext","comma,intext"
+space intext,space intext
+"quote""intext","quote""intext"
+"""quotes""","""quotes"""
+empty col >,
+"newline
+intext","newline
+intext"
+"
+newlines
+","
+newlines
+"
+"comma,space quote""and
+newline","comma,space quote""and
+newline"
+last empty >,
