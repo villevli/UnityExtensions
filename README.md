@@ -5,6 +5,7 @@ Collection of small extensions, utils and property attributes.
 - [SingleLineAttribute](Runtime/PropertyAttributes/SingleLineAttribute.cs) - Draw a serialized field on a single line even if it's a struct with multiple fields
 - [EnumDropdownAttribute](Runtime/PropertyAttributes/EnumDropdownAttribute.cs) - Draw a string or int field as an enum dropdown
 - [CSVParser](Runtime/CSVParser.cs) - A simple utility to parse a csv file
+- [SDateTime](Runtime/SDateTime.cs) - A DateTime value that can be serialized in Unity and displayed in inspector
 
 See [sample scripts](Samples~/Scripts)
 
