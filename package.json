@@ -17,6 +17,10 @@
     {
       "displayName": "Scripts",
       "path": "Samples~/Scripts"
+    },
+    {
+      "displayName": "uGUI",
+      "path": "Samples~/uGUI"
     }
   ]
 }
