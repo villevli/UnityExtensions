@@ -6,27 +6,33 @@ namespace VLExtensions
 {
     /// <summary>
     /// DateTime value that can be serialized in Unity and displayed in inspector.
-    /// Serializes into a standard and culture invariant string.
+    /// Serializes the value in UTC into a standard and culture invariant string.
     /// </summary>
     [Serializable]
-    public struct SDateTime : IFormattable
+    public struct SDateTime : IFormattable, ISerializationCallbackReceiver
     {
         [SerializeField]
-        private string timestamp;
+        [Delayed]
+        private string data;
 
-        private SDateTime(string timestamp)
-        {
-            this.timestamp = timestamp;
-        }
+        private DateTimeOffset value;
 
         public SDateTime(DateTime dateTime)
-            : this(ToString(dateTime))
+            : this(dateTime == default ? default : (DateTimeOffset)dateTime)
         {
         }
 
-        public readonly DateTime ToDateTime() => ToDateTime(timestamp);
+        public SDateTime(DateTimeOffset dateTime)
+        {
+            value = dateTime;
+            data = default;
+        }
 
+        public readonly DateTime ToDateTime() => value.UtcDateTime;
         public static SDateTime FromDateTime(DateTime value) => new(value);
+
+        public readonly DateTimeOffset ToDateTimeOffset() => value;
+        public static SDateTime FromDateTimeOffset(DateTimeOffset value) => new(value);
 
         public readonly string ToString(string format, IFormatProvider formatProvider)
         {
@@ -38,8 +44,21 @@ namespace VLExtensions
             return ToDateTime().ToString();
         }
 
+        void ISerializationCallbackReceiver.OnBeforeSerialize()
+        {
+            data = ToString(value);
+        }
+
+        void ISerializationCallbackReceiver.OnAfterDeserialize()
+        {
+            value = ToDateTimeOffset(data);
+        }
+
         public static implicit operator DateTime(SDateTime v) => v.ToDateTime();
         public static implicit operator SDateTime(DateTime v) => FromDateTime(v);
+
+        public static implicit operator DateTimeOffset(SDateTime v) => v.ToDateTimeOffset();
+        public static implicit operator SDateTime(DateTimeOffset v) => FromDateTimeOffset(v);
 
         /// <summary>
         /// Converts the <see cref="DateTime"/> to a string in standard formatting.
@@ -89,15 +108,34 @@ namespace VLExtensions
         /// <returns></returns>
         public static DateTimeOffset ToDateTimeOffset(string str)
         {
-            if (!string.IsNullOrWhiteSpace(str)
-                && DateTimeOffset.TryParse(str, CultureInfo.InvariantCulture,
-                                           DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal,
-                                           out var parsedDt))
+            if (string.IsNullOrWhiteSpace(str))
+                return default;
+            if (TryParseDateTimeOffset(str, out var value))
+                return value;
+            return default;
+        }
+
+        public static bool TryParseDateTimeOffset(string str, out DateTimeOffset value)
+        {
+            if (DateTimeOffset.TryParse(str, CultureInfo.InvariantCulture,
+                                        DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal,
+                                        out value))
             {
-                return parsedDt;
+                return true;
+            }
+            else if (long.TryParse(str, out var parsedTs))
+            {
+                value = DateTimeOffset.FromUnixTimeSeconds(parsedTs);
+                return true;
+            }
+            else if (double.TryParse(str, out var parsedTsd))
+            {
+                value = DateTimeOffset.FromUnixTimeSeconds((long)parsedTsd);
+                return true;
             }
 
-            return default;
+            value = default;
+            return false;
         }
     }
 }
