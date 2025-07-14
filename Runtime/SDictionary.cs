@@ -19,17 +19,17 @@ namespace VLExtensions
         }
 
         [SerializeField]
-        private List<SKeyValuePair> _data = new();
+        private List<SKeyValuePair> data = new();
 
         void ISerializationCallbackReceiver.OnBeforeSerialize()
         {
-            _data.Clear();
-            foreach (var kp in this)
+            data.Clear();
+            foreach (var kvp in this)
             {
-                _data.Add(new()
+                data.Add(new()
                 {
-                    Key = kp.Key,
-                    Value = kp.Value
+                    Key = kvp.Key,
+                    Value = kvp.Value
                 });
             }
         }
@@ -37,12 +37,12 @@ namespace VLExtensions
         void ISerializationCallbackReceiver.OnAfterDeserialize()
         {
             this.Clear();
-            foreach (var skp in _data)
+            foreach (var skvp in data)
             {
-                var key = skp.Key;
+                var key = skvp.Key;
                 var okey = key;
                 // Auto increment the key when serialized data contains a duplicate key (e.g. when adding an item in inspector)
-                while (!TryAdd(key, skp.Value)
+                while (!TryAdd(key, skvp.Value)
                      && TryIncrement(ref key)
                      // Some types like enum may wrap around, halt in that case
                      && !EqualityComparer<TKey>.Default.Equals(key, okey)) { }

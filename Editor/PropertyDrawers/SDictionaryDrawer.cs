@@ -9,13 +9,13 @@ namespace VLExtensionsEditor
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            var dataProp = property.FindPropertyRelative("_data");
+            var dataProp = property.FindPropertyRelative("data");
             EditorGUI.PropertyField(position, dataProp, label, true);
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            var dataProp = property.FindPropertyRelative("_data");
+            var dataProp = property.FindPropertyRelative("data");
             return EditorGUI.GetPropertyHeight(dataProp, label);
         }
     }
