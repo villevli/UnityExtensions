@@ -35,7 +35,7 @@ namespace VLExtensionsEditor
                     dtValue = default;
                 else if (TryParse(dtString, Mode, out var parsedDt))
                     dtValue = parsedDt;
-                tsProp.stringValue = SDateTime.ToString(dtValue);
+                tsProp.stringValue = SDateTime.ToString(dtValue.ToUniversalTime());
             }
             EditorGUI.EndProperty();
 
@@ -51,7 +51,7 @@ namespace VLExtensionsEditor
                 EditorGUI.FocusTextInControl("");
                 void SetTimestamp(DateTimeOffset dateTime)
                 {
-                    tsProp.stringValue = SDateTime.ToString(dateTime);
+                    tsProp.stringValue = SDateTime.ToString(dateTime.ToUniversalTime());
                     tsProp.serializedObject.ApplyModifiedProperties();
                 }
 
@@ -80,38 +80,34 @@ namespace VLExtensionsEditor
                 case DisplayMode.Local:
                     return SDateTime.ToString(value.LocalDateTime);
                 case DisplayMode.Unix:
-                    return value.ToUnixTimeSeconds().ToString();
+                    return (value.ToUnixTimeMilliseconds() / 1000d).ToString("0.###", NumberFormatInfo.InvariantInfo);
             }
         }
 
         private static bool TryParse(string str, DisplayMode mode, out DateTimeOffset value)
         {
+            // TODO: Support expressions like "+1 day" or "-2 hours"
             switch (mode)
             {
                 case DisplayMode.UTC:
                 default:
-                    return DateTimeOffset.TryParse(str, CultureInfo.InvariantCulture,
+                    return DateTimeOffset.TryParse(str, DateTimeFormatInfo.InvariantInfo,
                                                     DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal,
                                                     out value)
-                        || DateTimeOffset.TryParse(str, CultureInfo.CurrentCulture,
+                        || DateTimeOffset.TryParse(str, DateTimeFormatInfo.CurrentInfo,
                                                     DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal,
                                                     out value);
                 case DisplayMode.Local:
-                    return DateTimeOffset.TryParse(str, CultureInfo.InvariantCulture,
+                    return DateTimeOffset.TryParse(str, DateTimeFormatInfo.InvariantInfo,
                                                     DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeLocal,
                                                     out value)
-                        || DateTimeOffset.TryParse(str, CultureInfo.CurrentCulture,
+                        || DateTimeOffset.TryParse(str, DateTimeFormatInfo.CurrentInfo,
                                                     DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeLocal,
                                                     out value);
                 case DisplayMode.Unix:
-                    if (long.TryParse(str, out var parsedTs))
+                    if (ExpressionEvaluator.Evaluate(str, out double parsedDouble))
                     {
-                        value = DateTimeOffset.FromUnixTimeSeconds(parsedTs);
-                        return true;
-                    }
-                    else if (double.TryParse(str, out var parsedTsd))
-                    {
-                        value = DateTimeOffset.FromUnixTimeSeconds((long)parsedTsd);
+                        value = DateTimeOffset.FromUnixTimeMilliseconds((long)(parsedDouble * 1000));
                         return true;
                     }
                     value = default;

@@ -24,7 +24,7 @@ namespace VLExtensions
 
         public SDateTime(DateTimeOffset dateTime)
         {
-            value = dateTime;
+            value = dateTime.ToUniversalTime();
             data = default;
         }
 
@@ -83,7 +83,10 @@ namespace VLExtensions
         {
             if (dateTime == default)
                 return "";
-            return dateTime.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture);
+            if (dateTime.Millisecond != 0)
+                return dateTime.ToString("yyyy-MM-dd HH:mm:ss.fff", DateTimeFormatInfo.InvariantInfo);
+            else
+                return dateTime.ToString("yyyy-MM-dd HH:mm:ss", DateTimeFormatInfo.InvariantInfo);
         }
 
         /// <summary>
@@ -117,23 +120,24 @@ namespace VLExtensions
 
         public static bool TryParseDateTimeOffset(string str, out DateTimeOffset value)
         {
-            if (DateTimeOffset.TryParse(str, CultureInfo.InvariantCulture,
+            if (DateTimeOffset.TryParse(str, DateTimeFormatInfo.InvariantInfo,
                                         DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal,
                                         out value))
             {
                 return true;
             }
-            else if (long.TryParse(str, out var parsedTs))
+            // As fallback try to interpret as unix time.
+            if (double.TryParse(str, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out var parsedDouble))
             {
-                value = DateTimeOffset.FromUnixTimeSeconds(parsedTs);
-                return true;
+                try
+                {
+                    value = DateTimeOffset.FromUnixTimeMilliseconds((long)(parsedDouble * 1000));
+                    return true;
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                }
             }
-            else if (double.TryParse(str, out var parsedTsd))
-            {
-                value = DateTimeOffset.FromUnixTimeSeconds((long)parsedTsd);
-                return true;
-            }
-
             value = default;
             return false;
         }
