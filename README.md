@@ -6,6 +6,7 @@ Collection of small extensions, utils and property attributes.
 - [EnumDropdownAttribute](Runtime/PropertyAttributes/EnumDropdownAttribute.cs) - Draw a string or int field as an enum dropdown
 - [CSVParser](Runtime/CSVParser.cs) - A simple utility to parse a csv file
 - [SDateTime](Runtime/SDateTime.cs) - A DateTime value that can be serialized in Unity and displayed in inspector
+- [STimeSpan](Runtime/STimeSpan.cs) - A TimeSpan value that can be serialized in Unity and displayed in inspector
 - [SDictionary](Runtime/SDictionary.cs) - Dictionary that can be serialized in Unity and displayed in inspector.
 - [EventSystemCallbacks](Runtime/EventSystemCallbacks.cs) - Global callbacks just before any EventSystem event is executed
 
