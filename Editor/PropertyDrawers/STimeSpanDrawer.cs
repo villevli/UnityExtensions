@@ -91,31 +91,31 @@ namespace VLExtensionsEditor
             }
         }
 
-        private static bool TryParse(string str, DisplayMode mode, out TimeSpan value)
+        private static bool TryParse(string str, DisplayMode mode, out TimeSpan result)
         {
             // TODO: Support expressions like "+01:02:00", "+1 day", "-2 hours" or "*2" (multiply by 2), "/2" (divide by 2)
             switch (mode)
             {
                 case DisplayMode.Normal:
-                    return TimeSpan.TryParse(str, CultureInfo.InvariantCulture, out value)
-                        || TimeSpan.TryParse(str, CultureInfo.CurrentCulture, out value);
+                    return TimeSpan.TryParse(str, CultureInfo.InvariantCulture, out result)
+                        || TimeSpan.TryParse(str, CultureInfo.CurrentCulture, out result);
                 case DisplayMode.Human:
-                    return TryParseHumanReadable(str, out value);
+                    return TryParseHumanReadable(str, out result);
                 case DisplayMode.Ticks:
                     if (long.TryParse(str, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out var parsedLong))
                     {
-                        value = ToTimeSpan(parsedLong, mode);
+                        result = ToTimeSpan(parsedLong, mode);
                         return true;
                     }
-                    value = default;
+                    result = default;
                     return false;
                 default:
                     if (double.TryParse(str, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out var parsedDouble))
                     {
-                        value = ToTimeSpan(parsedDouble, mode);
+                        result = ToTimeSpan(parsedDouble, mode);
                         return true;
                     }
-                    value = default;
+                    result = default;
                     return false;
             }
         }

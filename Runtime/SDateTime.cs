@@ -118,11 +118,11 @@ namespace VLExtensions
             return default;
         }
 
-        public static bool TryParseDateTimeOffset(string str, out DateTimeOffset value)
+        public static bool TryParseDateTimeOffset(string str, out DateTimeOffset result)
         {
             if (DateTimeOffset.TryParse(str, DateTimeFormatInfo.InvariantInfo,
                                         DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal,
-                                        out value))
+                                        out result))
             {
                 return true;
             }
@@ -131,14 +131,14 @@ namespace VLExtensions
             {
                 try
                 {
-                    value = DateTimeOffset.FromUnixTimeMilliseconds((long)(parsedDouble * 1000));
+                    result = DateTimeOffset.FromUnixTimeMilliseconds((long)(parsedDouble * 1000));
                     return true;
                 }
                 catch (ArgumentOutOfRangeException)
                 {
                 }
             }
-            value = default;
+            result = default;
             return false;
         }
     }

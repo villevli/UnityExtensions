@@ -84,33 +84,33 @@ namespace VLExtensionsEditor
             }
         }
 
-        private static bool TryParse(string str, DisplayMode mode, out DateTimeOffset value)
+        private static bool TryParse(string str, DisplayMode mode, out DateTimeOffset result)
         {
-            // TODO: Support expressions like "+1 day" or "-2 hours"
+            // TODO: Support expressions like "+01:02:00", "+1 day", "-2 hours"
             switch (mode)
             {
                 case DisplayMode.UTC:
                 default:
                     return DateTimeOffset.TryParse(str, DateTimeFormatInfo.InvariantInfo,
                                                     DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal,
-                                                    out value)
+                                                    out result)
                         || DateTimeOffset.TryParse(str, DateTimeFormatInfo.CurrentInfo,
                                                     DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal,
-                                                    out value);
+                                                    out result);
                 case DisplayMode.Local:
                     return DateTimeOffset.TryParse(str, DateTimeFormatInfo.InvariantInfo,
                                                     DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeLocal,
-                                                    out value)
+                                                    out result)
                         || DateTimeOffset.TryParse(str, DateTimeFormatInfo.CurrentInfo,
                                                     DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeLocal,
-                                                    out value);
+                                                    out result);
                 case DisplayMode.Unix:
                     if (ExpressionEvaluator.Evaluate(str, out double parsedDouble))
                     {
-                        value = DateTimeOffset.FromUnixTimeMilliseconds((long)(parsedDouble * 1000));
+                        result = DateTimeOffset.FromUnixTimeMilliseconds((long)(parsedDouble * 1000));
                         return true;
                     }
-                    value = default;
+                    result = default;
                     return false;
             }
         }
