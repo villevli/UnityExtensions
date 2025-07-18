@@ -9,6 +9,7 @@ Collection of small extensions, utils and property attributes.
 - [STimeSpan](Runtime/STimeSpan.cs) - A TimeSpan value that can be serialized in Unity and displayed in inspector
 - [SDictionary](Runtime/SDictionary.cs) - Dictionary that can be serialized in Unity and displayed in inspector.
 - [EventSystemCallbacks](Runtime/EventSystemCallbacks.cs) - Global callbacks just before any EventSystem event is executed
+- [SavedPrefs](Runtime/SavedPrefs.cs) - PlayerPrefs but supports more types like bool, long, enum and DateTime.
 
 See [samples](Samples~)
 
